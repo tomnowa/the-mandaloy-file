@@ -3,546 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Mondaloy File is an open-source investigation into the invention, transfer, and strategic significance of the Mondaloy superalloy and related disappearances.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#FAF7F2">
+<meta name="color-scheme" content="light">
+<meta name="author" content="The Mondaloy File">
+<meta name="keywords" content="Mondaloy, rocket engine alloy, aerospace investigation, AR1 engine, AFRL, Aerojet Rocketdyne">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Mondaloy File — An Open-Source Investigation">
+<meta property="og:description" content="A structured open-source record of Mondaloy history, key personnel, timeline, and unresolved questions.">
+<meta property="og:site_name" content="The Mondaloy File">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Mondaloy File — An Open-Source Investigation">
+<meta name="twitter:description" content="A structured open-source record of Mondaloy history, key personnel, timeline, and unresolved questions.">
 <title>The Mondaloy File — An Open-Source Investigation</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #FAF7F2;
-  --bg-card: #FFFFFF;
-  --bg-accent: #F0EBE3;
-  --text: #2C2825;
-  --text-secondary: #6B6560;
-  --text-tertiary: #9A9490;
-  --accent: #B85C38;
-  --accent-light: #E8D5C4;
-  --accent-dark: #8B4228;
-  --blue: #3D6B8E;
-  --blue-light: #D4E3ED;
-  --green: #4A7C59;
-  --green-light: #D8E8DC;
-  --red: #A63D40;
-  --red-light: #EDD4D5;
-  --yellow: #C09F50;
-  --yellow-light: #F0E6CC;
-  --border: #E0DAD2;
-  --serif: 'Source Serif 4', Georgia, serif;
-  --sans: 'IBM Plex Sans', -apple-system, sans-serif;
-  --mono: 'IBM Plex Mono', monospace;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 16px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-
-::selection { background: var(--accent-light); color: var(--accent-dark); }
-
-/* HEADER */
-.site-header {
-  padding: 2rem 2rem 0;
-  max-width: 1280px;
-  margin: 0 auto;
-}
-.header-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
-}
-.header-brand {
-  font-family: var(--mono);
-  font-size: 0.8rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-}
-.header-date {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-}
-.hero {
-  padding: 3.5rem 0 2.5rem;
-  max-width: 780px;
-}
-.hero h1 {
-  font-family: var(--serif);
-  font-size: clamp(2.2rem, 5vw, 3.2rem);
-  font-weight: 700;
-  line-height: 1.15;
-  color: var(--text);
-  margin-bottom: 1rem;
-}
-.hero h1 span { color: var(--accent); }
-.hero .dek {
-  font-family: var(--serif);
-  font-size: 1.2rem;
-  font-weight: 300;
-  line-height: 1.55;
-  color: var(--text-secondary);
-  max-width: 640px;
-}
-.hero .credit {
-  margin-top: 1.25rem;
-  font-size: 0.8rem;
-  color: var(--text-tertiary);
-}
-.hero .credit a { color: var(--blue); text-decoration: none; }
-.hero .credit a:hover { text-decoration: underline; }
-
-/* NAV */
-.nav-strip {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 0 2rem;
-  backdrop-filter: blur(8px);
-}
-.nav-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  gap: 0.25rem;
-  overflow-x: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding: 0.6rem 0;
-}
-.nav-inner::-webkit-scrollbar { display: none; }
-.nav-inner a {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  text-decoration: none;
-  padding: 0.4rem 0.75rem;
-  border-radius: 4px;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
-.nav-inner a:hover { background: var(--bg-accent); color: var(--text); }
-
-/* MAIN */
-main {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 2rem 4rem;
-}
-
-section { padding: 3rem 0; }
-section + section { border-top: 1px solid var(--border); }
-
-.section-label {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-}
-.section-title {
-  font-family: var(--serif);
-  font-size: 1.65rem;
-  font-weight: 600;
-  line-height: 1.25;
-  margin-bottom: 0.6rem;
-}
-.section-desc {
-  color: var(--text-secondary);
-  max-width: 620px;
-  margin-bottom: 2rem;
-  font-size: 0.95rem;
-}
-
-/* CARDS */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.5rem;
-  transition: box-shadow 0.25s;
-}
-.card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-
-/* TRIANGLE */
-.triangle-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
-}
-.person-card { position: relative; overflow: hidden; }
-.person-card .role-tag {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 0.2rem 0.6rem;
-  border-radius: 3px;
-  display: inline-block;
-  margin-bottom: 0.75rem;
-}
-.role-inventor .role-tag { background: var(--blue-light); color: var(--blue); }
-.role-qualifier .role-tag { background: var(--green-light); color: var(--green); }
-.role-funder .role-tag { background: var(--yellow-light); color: var(--yellow); }
-.person-card h3 {
-  font-family: var(--serif);
-  font-size: 1.15rem;
-  font-weight: 600;
-  margin-bottom: 0.2rem;
-}
-.person-card .person-title {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.75rem;
-}
-.person-card .person-body {
-  font-size: 0.88rem;
-  color: var(--text);
-  line-height: 1.6;
-}
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  padding: 0.25rem 0.65rem;
-  border-radius: 3px;
-  margin-top: 0.85rem;
-}
-.status-deceased { background: var(--bg-accent); color: var(--text-secondary); }
-.status-missing { background: var(--red-light); color: var(--red); }
-.status-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  display: inline-block;
-}
-.status-missing .status-dot { background: var(--red); animation: pulse 2s infinite; }
-.status-deceased .status-dot { background: var(--text-tertiary); }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-/* WHAT IS MONDALOY */
-.explainer-box {
-  background: var(--bg-accent);
-  border-radius: 8px;
-  padding: 2rem;
-  max-width: 780px;
-  margin-bottom: 2rem;
-}
-.explainer-box h3 {
-  font-family: var(--serif);
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-}
-.explainer-box p {
-  font-size: 0.92rem;
-  line-height: 1.7;
-  color: var(--text);
-  margin-bottom: 0.75rem;
-}
-.explainer-box p:last-child { margin-bottom: 0; }
-
-/* TIMELINE */
-.timeline {
-  position: relative;
-  padding-left: 2.5rem;
-  max-width: 780px;
-}
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 7px;
-  top: 6px;
-  bottom: 6px;
-  width: 2px;
-  background: var(--border);
-}
-.tl-item {
-  position: relative;
-  padding-bottom: 1.75rem;
-}
-.tl-item:last-child { padding-bottom: 0; }
-.tl-dot {
-  position: absolute;
-  left: -2.5rem;
-  top: 4px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  background: var(--bg);
-}
-.tl-item.tl-major .tl-dot { border-color: var(--accent); background: var(--accent); }
-.tl-item.tl-missing .tl-dot { border-color: var(--red); background: var(--red); }
-.tl-item.tl-corporate .tl-dot { border-color: var(--blue); background: var(--blue-light); }
-.tl-date {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--text-tertiary);
-  letter-spacing: 0.03em;
-  margin-bottom: 0.15rem;
-}
-.tl-title {
-  font-weight: 600;
-  font-size: 0.92rem;
-  margin-bottom: 0.2rem;
-}
-.tl-body {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-/* CLUSTER TABLE */
-.cluster-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
-.cluster-table th {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  text-align: left;
-  padding: 0.6rem 0.75rem;
-  border-bottom: 2px solid var(--border);
-}
-.cluster-table td {
-  padding: 0.7rem 0.75rem;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-.cluster-table tr:last-child td { border-bottom: none; }
-.cluster-table .name-cell { font-weight: 600; }
-.mo-tag {
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  padding: 0.1rem 0.4rem;
-  border-radius: 3px;
-  background: var(--bg-accent);
-  color: var(--text-secondary);
-  margin: 0.1rem 0.15rem 0.1rem 0;
-}
-.mo-tag.match { background: var(--red-light); color: var(--red); }
-
-/* STATS */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 2rem;
-}
-.stat-card {
-  text-align: center;
-  padding: 1.75rem 1rem;
-}
-.stat-number {
-  font-family: var(--serif);
-  font-size: 2.8rem;
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 0.3rem;
-}
-.stat-number.stat-red { color: var(--red); }
-.stat-number.stat-accent { color: var(--accent); }
-.stat-number.stat-blue { color: var(--blue); }
-.stat-label {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  line-height: 1.4;
-}
-.stat-note {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  color: var(--text-tertiary);
-  margin-top: 0.4rem;
-}
-
-/* CORPORATE CHAIN */
-.chain {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-.chain-node {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 0.5rem 0.85rem;
-  font-size: 0.82rem;
-  font-weight: 500;
-}
-.chain-node .chain-year {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: var(--text-tertiary);
-  display: block;
-}
-.chain-arrow { color: var(--text-tertiary); font-size: 1rem; }
-.chain-node.chain-current { border-color: var(--accent); background: #FDF8F5; }
-
-/* QUESTIONS */
-.questions-list {
-  max-width: 780px;
-}
-.q-item {
-  padding: 1.25rem 0;
-  border-bottom: 1px solid var(--border);
-}
-.q-item:last-child { border-bottom: none; }
-.q-num {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  font-weight: 500;
-  color: var(--accent);
-  letter-spacing: 0.04em;
-  margin-bottom: 0.25rem;
-}
-.q-text {
-  font-family: var(--serif);
-  font-size: 1.05rem;
-  font-weight: 400;
-  line-height: 1.5;
-  margin-bottom: 0.35rem;
-}
-.q-context {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  line-height: 1.55;
-}
-
-/* EVIDENCE TAGS */
-.ev-tag {
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding: 0.15rem 0.45rem;
-  border-radius: 2px;
-  margin-right: 0.3rem;
-  vertical-align: middle;
-}
-.ev-documented { background: var(--green-light); color: var(--green); }
-.ev-claimed { background: var(--yellow-light); color: var(--yellow); }
-.ev-inferred { background: var(--blue-light); color: var(--blue); }
-.ev-disputed { background: var(--red-light); color: var(--red); }
-
-/* DELETION TRACKER */
-.deletion-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-}
-.del-card {
-  border-left: 3px solid var(--red);
-}
-.del-card .del-platform {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  font-weight: 500;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.4rem;
-}
-.del-card .del-desc {
-  font-size: 0.85rem;
-  line-height: 1.55;
-}
-.del-card .del-id {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  color: var(--text-tertiary);
-  margin-top: 0.5rem;
-}
-
-/* METHODOLOGY */
-.method-box {
-  background: var(--bg-accent);
-  border-radius: 8px;
-  padding: 1.75rem;
-  max-width: 780px;
-}
-.method-box h4 {
-  font-family: var(--sans);
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-.method-box p {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  margin-bottom: 0.6rem;
-}
-
-/* FOOTER */
-.site-footer {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2.5rem 2rem;
-  border-top: 1px solid var(--border);
-  font-size: 0.8rem;
-  color: var(--text-tertiary);
-  line-height: 1.7;
-}
-.site-footer a { color: var(--blue); text-decoration: none; }
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .site-header, main, .site-footer, .nav-strip { padding-left: 1.25rem; padding-right: 1.25rem; }
-  .triangle-grid { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .chain { flex-direction: column; align-items: flex-start; }
-  .chain-arrow { transform: rotate(90deg); }
-  .cluster-table { display: block; overflow-x: auto; }
-  section { padding: 2rem 0; }
-}
-
-/* SUBTLE ANIMATION */
-.fade-up {
-  opacity: 0;
-  transform: translateY(12px);
-  animation: fadeUp 0.5s ease forwards;
-}
-@keyframes fadeUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-.fade-up:nth-child(2) { animation-delay: 0.08s; }
-.fade-up:nth-child(3) { animation-delay: 0.16s; }
-</style>
+<link rel="stylesheet" href="styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Mondaloy File — An Open-Source Investigation",
+  "description": "An open-source investigation into Mondaloy, a nickel-based superalloy critical to U.S. rocket propulsion.",
+  "author": {
+    "@type": "Organization",
+    "name": "The Mondaloy File"
+  },
+  "inLanguage": "en",
+  "dateModified": "2026-04-14"
+}
+</script>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 
 <header class="site-header">
   <div class="header-bar">
@@ -552,11 +45,11 @@ section + section { border-top: 1px solid var(--border); }
   <div class="hero">
     <h1>The <span>Mondaloy</span> File</h1>
     <p class="dek">Three people knew how to make a metal America needs for its rocket engines. The patents expired in 2012. One died in 2014. Two vanished in 2025–2026. This is the documented record.</p>
-    <p class="credit">Original analysis by <a href="https://x.com/1O0001001101111" target="_blank">@0xTars</a> · Supplementary research via The Sentinel Network, SpaceNews, Daily Mail, and public filings</p>
+    <p class="credit">Original analysis by <a href="https://x.com/1O0001001101111" target="_blank" rel="noopener noreferrer">@0xTars</a> · Supplementary research via The Sentinel Network, SpaceNews, Daily Mail, and public filings</p>
   </div>
 </header>
 
-<nav class="nav-strip">
+<nav class="nav-strip" aria-label="Section navigation">
   <div class="nav-inner">
     <a href="#mondaloy">What Is Mondaloy</a>
     <a href="#triangle">The Three People</a>
@@ -569,12 +62,12 @@ section + section { border-top: 1px solid var(--border); }
   </div>
 </nav>
 
-<main>
+<main id="main-content">
 
 <!-- WHAT IS MONDALOY -->
 <section id="mondaloy">
-  <div class="section-label">Part 1</div>
-  <div class="section-title">What is Mondaloy and why does it matter?</div>
+  <p class="section-label">Part 1</p>
+  <h2 class="section-title">What is Mondaloy and why does it matter?</h2>
   <div class="explainer-box fade-up">
     <h3>The problem</h3>
     <p>High-performance rocket engines need to push hot oxygen through metal parts at extreme pressure. Hot oxygen makes most metals catch fire. Russia solved this in the 1960s. For decades, the US military launched its own spy satellites using Russian-built RD-180 engines because we couldn't make an American equivalent.</p>
@@ -594,9 +87,9 @@ section + section { border-top: 1px solid var(--border); }
 
 <!-- THE TRIANGLE -->
 <section id="triangle">
-  <div class="section-label">Part 2</div>
-  <div class="section-title">The three people who held the knowledge</div>
-  <div class="section-desc">One inventor. One qualifier. One funder. Together they held the complete institutional memory of how Mondaloy moved from a lab bench to a flight-qualified rocket engine component.</div>
+  <p class="section-label">Part 2</p>
+  <h2 class="section-title">The three people who held the knowledge</h2>
+  <p class="section-desc">One inventor. One qualifier. One funder. Together they held the complete institutional memory of how Mondaloy moved from a lab bench to a flight-qualified rocket engine component.</p>
 
   <div class="triangle-grid">
     <div class="card person-card role-inventor fade-up">
@@ -633,9 +126,9 @@ section + section { border-top: 1px solid var(--border); }
 
 <!-- TIMELINE -->
 <section id="timeline">
-  <div class="section-label">Part 3</div>
-  <div class="section-title">Chronology</div>
-  <div class="section-desc">Key events from the invention of Mondaloy through the current disappearance cluster, including corporate transfers and institutional milestones.</div>
+  <p class="section-label">Part 3</p>
+  <h2 class="section-title">Chronology</h2>
+  <p class="section-desc">Key events from the invention of Mondaloy through the current disappearance cluster, including corporate transfers and institutional milestones.</p>
 
   <div class="timeline">
     <div class="tl-item tl-major">
@@ -751,9 +244,9 @@ section + section { border-top: 1px solid var(--border); }
 
 <!-- CLUSTER -->
 <section id="cluster">
-  <div class="section-label">Part 4</div>
-  <div class="section-title">The disappearance cluster</div>
-  <div class="section-desc">Five senior cleared personnel from named defense institutions vanished without a trace within a 10-month window. Three share a near-identical behavioural signature.</div>
+  <p class="section-label">Part 4</p>
+  <h2 class="section-title">The disappearance cluster</h2>
+  <p class="section-desc">Five senior cleared personnel from named defense institutions vanished without a trace within a 10-month window. Three share a near-identical behavioural signature.</p>
 
   <div class="card" style="overflow-x: auto; margin-bottom: 1.5rem;">
     <table class="cluster-table">
@@ -820,9 +313,9 @@ section + section { border-top: 1px solid var(--border); }
 
 <!-- STATISTICS -->
 <section id="statistics">
-  <div class="section-label">Part 5</div>
-  <div class="section-title">The base-rate test</div>
-  <div class="section-desc">A Poisson test comparing observed disappearances against expected rates for senior cleared personnel at named defense institutions.</div>
+  <p class="section-label">Part 5</p>
+  <h2 class="section-title">The base-rate test</h2>
+  <p class="section-desc">A Poisson test comparing observed disappearances against expected rates for senior cleared personnel at named defense institutions.</p>
 
   <div class="stats-grid">
     <div class="card stat-card fade-up">
@@ -854,9 +347,9 @@ section + section { border-top: 1px solid var(--border); }
 
 <!-- CORPORATE CHAIN -->
 <section id="corporate">
-  <div class="section-label">Part 6</div>
-  <div class="section-title">The corporate chain of custody</div>
-  <div class="section-desc">Mondaloy's trade secrets have passed through seven corporate owners in thirty years. The current transaction raises specific regulatory questions.</div>
+  <p class="section-label">Part 6</p>
+  <h2 class="section-title">The corporate chain of custody</h2>
+  <p class="section-desc">Mondaloy's trade secrets have passed through seven corporate owners in thirty years. The current transaction raises specific regulatory questions.</p>
 
   <div class="chain">
     <div class="chain-node"><span class="chain-year">1990s</span>Rockwell Int'l</div>
@@ -884,9 +377,9 @@ section + section { border-top: 1px solid var(--border); }
 
 <!-- DELETIONS -->
 <section id="deletions">
-  <div class="section-label">Part 7</div>
-  <div class="section-title">The deletion pattern</div>
-  <div class="section-desc">Four items discussing the Reza memorial or phone evidence were removed across four platforms by different apparent actors.</div>
+  <p class="section-label">Part 7</p>
+  <h2 class="section-title">The deletion pattern</h2>
+  <p class="section-desc">Four items discussing the Reza memorial or phone evidence were removed across four platforms by different apparent actors.</p>
 
   <div class="deletion-grid">
     <div class="card del-card fade-up">
@@ -914,9 +407,9 @@ section + section { border-top: 1px solid var(--border); }
 
 <!-- QUESTIONS -->
 <section id="questions">
-  <div class="section-label">Part 8</div>
-  <div class="section-title">Unanswered questions</div>
-  <div class="section-desc">Specific, checkable questions that could be resolved with public records, FOIA requests, or subpoena power.</div>
+  <p class="section-label">Part 8</p>
+  <h2 class="section-title">Unanswered questions</h2>
+  <p class="section-desc">Specific, checkable questions that could be resolved with public records, FOIA requests, or subpoena power.</p>
 
   <div class="questions-list">
     <div class="q-item">
@@ -965,7 +458,7 @@ section + section { border-top: 1px solid var(--border); }
 </main>
 
 <footer class="site-footer">
-  <p><strong>About this page.</strong> This dashboard synthesises publicly available information from patent records, SEC filings, law enforcement press releases, news reporting, and open-source investigative work. It does not assert that any disappearance is the result of foul play. It presents documented facts, flags claims and inferences, and identifies specific questions that remain unanswered. Primary analytical source: <a href="https://x.com/1O0001001101111" target="_blank">@0xTars</a>. Supplementary reporting from The Sentinel Network, SpaceNews, Daily Mail, Newsweek, NewsNation, Men's Journal, and LASD public records.</p>
+  <p><strong>About this page.</strong> This dashboard synthesises publicly available information from patent records, SEC filings, law enforcement press releases, news reporting, and open-source investigative work. It does not assert that any disappearance is the result of foul play. It presents documented facts, flags claims and inferences, and identifies specific questions that remain unanswered. Primary analytical source: <a href="https://x.com/1O0001001101111" target="_blank" rel="noopener noreferrer">@0xTars</a>. Supplementary reporting from The Sentinel Network, SpaceNews, Daily Mail, Newsweek, NewsNation, Men's Journal, and LASD public records.</p>
   <p style="margin-top: 0.75rem;">Evidence labels: <span class="ev-tag ev-documented">Documented</span> On the public record. <span class="ev-tag ev-claimed">Claimed</span> Stated by a named source, not independently verified. <span class="ev-tag ev-inferred">Inferred</span> Analytical conclusion from documented facts. <span class="ev-tag ev-disputed">Disputed</span> Actively contested between credible sources.</p>
 </footer>
 
