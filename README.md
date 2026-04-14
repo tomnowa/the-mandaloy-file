@@ -17,20 +17,10 @@ A single-page static site synthesising publicly available information from paten
 7. **Deletion Pattern** — Four items discussing the Reza memorial or phone evidence removed across four platforms
 8. **Unanswered Questions** — Eight specific, checkable questions resolvable with public records or subpoena power
 
-## Deployment
-
-This is a static single-file site. To deploy on GitHub Pages:
-
-1. Push this repo to GitHub
-2. Go to **Settings → Pages**
-3. Set source to **Deploy from a branch**, select `main` and `/ (root)`
-4. Your site will be live at `https://<username>.github.io/mondaloy-file/`
-
-No build step required. No dependencies. Fonts load from Google Fonts CDN.
-
 ## Sources
 
 - Primary analysis: [@0xTars](https://x.com/1O0001001101111)
+- Dashboard inspiration: [RileyCamuto](https://x.com/RileyRalmuto) and his [https://riley-coyote.github.io/mccasland-dossier/](https://riley-coyote.github.io/mccasland-dossier/)
 - The Sentinel Network
 - SpaceNews (2017 Mondaloy profile)
 - Daily Mail investigative reporting
