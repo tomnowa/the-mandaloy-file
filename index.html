@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mondaloy File — An Open-Source Investigation</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF7F2;
+  --bg-card: #FFFFFF;
+  --bg-accent: #F0EBE3;
+  --text: #2C2825;
+  --text-secondary: #6B6560;
+  --text-tertiary: #9A9490;
+  --accent: #B85C38;
+  --accent-light: #E8D5C4;
+  --accent-dark: #8B4228;
+  --blue: #3D6B8E;
+  --blue-light: #D4E3ED;
+  --green: #4A7C59;
+  --green-light: #D8E8DC;
+  --red: #A63D40;
+  --red-light: #EDD4D5;
+  --yellow: #C09F50;
+  --yellow-light: #F0E6CC;
+  --border: #E0DAD2;
+  --serif: 'Source Serif 4', Georgia, serif;
+  --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent-light); color: var(--accent-dark); }
+
+/* HEADER */
+.site-header {
+  padding: 2rem 2rem 0;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.header-brand {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.header-date {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+.hero {
+  padding: 3.5rem 0 2.5rem;
+  max-width: 780px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+.hero h1 span { color: var(--accent); }
+.hero .dek {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  max-width: 640px;
+}
+.hero .credit {
+  margin-top: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+.hero .credit a { color: var(--blue); text-decoration: none; }
+.hero .credit a:hover { text-decoration: underline; }
+
+/* NAV */
+.nav-strip {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  backdrop-filter: blur(8px);
+}
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0.6rem 0;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.nav-inner a {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.nav-inner a:hover { background: var(--bg-accent); color: var(--text); }
+
+/* MAIN */
+main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+section { padding: 3rem 0; }
+section + section { border-top: 1px solid var(--border); }
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 0.6rem;
+}
+.section-desc {
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+/* CARDS */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: box-shadow 0.25s;
+}
+.card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+
+/* TRIANGLE */
+.triangle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.person-card { position: relative; overflow: hidden; }
+.person-card .role-tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
+.role-inventor .role-tag { background: var(--blue-light); color: var(--blue); }
+.role-qualifier .role-tag { background: var(--green-light); color: var(--green); }
+.role-funder .role-tag { background: var(--yellow-light); color: var(--yellow); }
+.person-card h3 {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.person-card .person-title {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+.person-card .person-body {
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 3px;
+  margin-top: 0.85rem;
+}
+.status-deceased { background: var(--bg-accent); color: var(--text-secondary); }
+.status-missing { background: var(--red-light); color: var(--red); }
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  display: inline-block;
+}
+.status-missing .status-dot { background: var(--red); animation: pulse 2s infinite; }
+.status-deceased .status-dot { background: var(--text-tertiary); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* WHAT IS MONDALOY */
+.explainer-box {
+  background: var(--bg-accent);
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 780px;
+  margin-bottom: 2rem;
+}
+.explainer-box h3 {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.explainer-box p {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+.explainer-box p:last-child { margin-bottom: 0; }
+
+/* TIMELINE */
+.timeline {
+  position: relative;
+  padding-left: 2.5rem;
+  max-width: 780px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: var(--border);
+}
+.tl-item {
+  position: relative;
+  padding-bottom: 1.75rem;
+}
+.tl-item:last-child { padding-bottom: 0; }
+.tl-dot {
+  position: absolute;
+  left: -2.5rem;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--bg);
+}
+.tl-item.tl-major .tl-dot { border-color: var(--accent); background: var(--accent); }
+.tl-item.tl-missing .tl-dot { border-color: var(--red); background: var(--red); }
+.tl-item.tl-corporate .tl-dot { border-color: var(--blue); background: var(--blue-light); }
+.tl-date {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.15rem;
+}
+.tl-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 0.2rem;
+}
+.tl-body {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* CLUSTER TABLE */
+.cluster-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.cluster-table th {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 2px solid var(--border);
+}
+.cluster-table td {
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.cluster-table tr:last-child td { border-bottom: none; }
+.cluster-table .name-cell { font-weight: 600; }
+.mo-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: var(--bg-accent);
+  color: var(--text-secondary);
+  margin: 0.1rem 0.15rem 0.1rem 0;
+}
+.mo-tag.match { background: var(--red-light); color: var(--red); }
+
+/* STATS */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  text-align: center;
+  padding: 1.75rem 1rem;
+}
+.stat-number {
+  font-family: var(--serif);
+  font-size: 2.8rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.stat-number.stat-red { color: var(--red); }
+.stat-number.stat-accent { color: var(--accent); }
+.stat-number.stat-blue { color: var(--blue); }
+.stat-label {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.stat-note {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  margin-top: 0.4rem;
+}
+
+/* CORPORATE CHAIN */
+.chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.chain-node {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+.chain-node .chain-year {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  display: block;
+}
+.chain-arrow { color: var(--text-tertiary); font-size: 1rem; }
+.chain-node.chain-current { border-color: var(--accent); background: #FDF8F5; }
+
+/* QUESTIONS */
+.questions-list {
+  max-width: 780px;
+}
+.q-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.q-item:last-child { border-bottom: none; }
+.q-num {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.25rem;
+}
+.q-text {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 0.35rem;
+}
+.q-context {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* EVIDENCE TAGS */
+.ev-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  margin-right: 0.3rem;
+  vertical-align: middle;
+}
+.ev-documented { background: var(--green-light); color: var(--green); }
+.ev-claimed { background: var(--yellow-light); color: var(--yellow); }
+.ev-inferred { background: var(--blue-light); color: var(--blue); }
+.ev-disputed { background: var(--red-light); color: var(--red); }
+
+/* DELETION TRACKER */
+.deletion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.del-card {
+  border-left: 3px solid var(--red);
+}
+.del-card .del-platform {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+.del-card .del-desc {
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+.del-card .del-id {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-top: 0.5rem;
+}
+
+/* METHODOLOGY */
+.method-box {
+  background: var(--bg-accent);
+  border-radius: 8px;
+  padding: 1.75rem;
+  max-width: 780px;
+}
+.method-box h4 {
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.method-box p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 0.6rem;
+}
+
+/* FOOTER */
+.site-footer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  line-height: 1.7;
+}
+.site-footer a { color: var(--blue); text-decoration: none; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .site-header, main, .site-footer, .nav-strip { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .triangle-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .chain { flex-direction: column; align-items: flex-start; }
+  .chain-arrow { transform: rotate(90deg); }
+  .cluster-table { display: block; overflow-x: auto; }
+  section { padding: 2rem 0; }
+}
+
+/* SUBTLE ANIMATION */
+.fade-up {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUp 0.5s ease forwards;
+}
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up:nth-child(2) { animation-delay: 0.08s; }
+.fade-up:nth-child(3) { animation-delay: 0.16s; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-bar">
+    <div class="header-brand">Open-Source Investigation</div>
+    <div class="header-date">Last updated April 14, 2026 · v6</div>
+  </div>
+  <div class="hero">
+    <h1>The <span>Mondaloy</span> File</h1>
+    <p class="dek">Three people knew how to make a metal America needs for its rocket engines. The patents expired in 2012. One died in 2014. Two vanished in 2025–2026. This is the documented record.</p>
+    <p class="credit">Original analysis by <a href="https://x.com/1O0001001101111" target="_blank">@0xTars</a> · Supplementary research via The Sentinel Network, SpaceNews, Daily Mail, and public filings</p>
+  </div>
+</header>
+
+<nav class="nav-strip">
+  <div class="nav-inner">
+    <a href="#mondaloy">What Is Mondaloy</a>
+    <a href="#triangle">The Three People</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#cluster">The Cluster</a>
+    <a href="#statistics">Statistics</a>
+    <a href="#corporate">Corporate Chain</a>
+    <a href="#deletions">Deletion Pattern</a>
+    <a href="#questions">Unanswered Questions</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- WHAT IS MONDALOY -->
+<section id="mondaloy">
+  <div class="section-label">Part 1</div>
+  <div class="section-title">What is Mondaloy and why does it matter?</div>
+  <div class="explainer-box fade-up">
+    <h3>The problem</h3>
+    <p>High-performance rocket engines need to push hot oxygen through metal parts at extreme pressure. Hot oxygen makes most metals catch fire. Russia solved this in the 1960s. For decades, the US military launched its own spy satellites using Russian-built RD-180 engines because we couldn't make an American equivalent.</p>
+    <p>In the mid-1990s, two metallurgists at Rockwell International invented a nickel-based superalloy that could survive that environment without igniting or cracking. They called it <strong>Mondaloy</strong> — a portmanteau of <strong>Mon</strong>ica Jacinto and <strong>Dal</strong>lis Hardwick.</p>
+    <p>After Russia cut off RD-180 servicing in March 2022 over Ukraine sanctions, Mondaloy became the material standing between the United States and a gap in its ability to put national security assets into orbit.</p>
+  </div>
+  <div class="explainer-box fade-up">
+    <h3>The technical significance</h3>
+    <p>Mondaloy is used in approximately 12 components of the AR1 engine: preburner, turbine rotor, turbine housing, ducts, lines, and hot gas manifold — everything that touches oxygen-rich combustion. It can be cast, forged, and 3D-printed. Two variants exist: Mondaloy 100 and Mondaloy 200, optimised for different temperature and pressure ranges.</p>
+    <p>The AR1 program was an $804 million public-private partnership between the US Air Force, Aerojet Rocketdyne, and United Launch Alliance. It was designed to be the domestic replacement for the RD-180.</p>
+  </div>
+  <div class="explainer-box fade-up" style="background: #FDF6F0; border-left: 3px solid var(--accent);">
+    <h3>The critical fact</h3>
+    <p>All three US patent applications for Mondaloy were filed between 2001 and 2009. <strong>All three were abandoned.</strong> The last one expired in December 2012. After that, the composition was technically public from expired filings, but the composition is not the recipe. The recipe is twenty years of process development — how to cast it, heat-treat it, machine it, print it, integrate it — knowledge that lived in human heads, not in any document.</p>
+  </div>
+</section>
+
+<!-- THE TRIANGLE -->
+<section id="triangle">
+  <div class="section-label">Part 2</div>
+  <div class="section-title">The three people who held the knowledge</div>
+  <div class="section-desc">One inventor. One qualifier. One funder. Together they held the complete institutional memory of how Mondaloy moved from a lab bench to a flight-qualified rocket engine component.</div>
+
+  <div class="triangle-grid">
+    <div class="card person-card role-inventor fade-up">
+      <div class="role-tag">Co-Inventor &amp; Production Lead</div>
+      <h3>Monica Jacinto Reza</h3>
+      <div class="person-title">Technical Fellow, Aerojet Rocketdyne → JPL NASA</div>
+      <div class="person-body">
+        Columbia University metallurgical engineering (BS). UCLA materials science (MS). Joined Rocketdyne in 1988. Co-invented Mondaloy in the mid-1990s. Spent 25+ years shepherding the alloy from lab composition through Air Force and NASA contracts to flight qualification. Holder of US Patent 2010/0266442 A1. Associate Fellow, AIAA. The only living person who knew the full manufacturing chain from start to finish. Quietly moved from Aerojet Rocketdyne to JPL NASA between 2023–2024, under her family name.
+      </div>
+      <div class="status-badge status-missing"><span class="status-dot"></span> Missing since June 22, 2025</div>
+    </div>
+
+    <div class="card person-card role-qualifier fade-up">
+      <div class="role-tag">Co-Inventor &amp; Government Qualifier</div>
+      <h3>Dallis Hardwick</h3>
+      <div class="person-title">Senior Civilian Scientist, AFRL Materials Directorate</div>
+      <div class="person-body">
+        Co-invented Mondaloy at Rockwell Science Centre. Moved to AFRL at Wright-Patterson AFB. By 2005, led all materials research for advanced gas turbine engines. Her directorate was the government side of the Mondaloy cost-sharing contracts — qualifying the alloy for military use. Meritorious Civilian Service Medal (2010). First woman to receive TMS Structural Materials Division Distinguished Service Award.
+      </div>
+      <div class="status-badge status-deceased"><span class="status-dot"></span> Died January 5, 2014 (cancer)</div>
+    </div>
+
+    <div class="card person-card role-funder fade-up">
+      <div class="role-tag">Program Funder &amp; Commander</div>
+      <h3>Maj. Gen. William Neil McCasland</h3>
+      <div class="person-title">Commander, Air Force Research Laboratory (2011–2013)</div>
+      <div class="person-body">
+        PhD, MIT. 34-year Air Force career. Commander of AFRL at Wright-Patterson, managing $4.4 billion in S&T funding including all Mondaloy-related programs. Previously: Director of Space Acquisition (SecAF office), Executive Secretary of SAPOC (the committee overseeing every DoD Special Access Program), Commander of Phillips Research Site at Kirtland AFB. Post-retirement ties to UAP disclosure networks documented in WikiLeaks Podesta emails.
+      </div>
+      <div class="status-badge status-missing"><span class="status-dot"></span> Missing since February 27, 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <div class="section-label">Part 3</div>
+  <div class="section-title">Chronology</div>
+  <div class="section-desc">Key events from the invention of Mondaloy through the current disappearance cluster, including corporate transfers and institutional milestones.</div>
+
+  <div class="timeline">
+    <div class="tl-item tl-major">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Mid-1990s</div>
+      <div class="tl-title">Mondaloy invented at Rockwell Science Centre</div>
+      <div class="tl-body">Monica Jacinto and Dallis Hardwick develop a nickel-based superalloy that can survive high-pressure gaseous oxygen without burning or cracking.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">1999</div>
+      <div class="tl-title">First AFRL cost-sharing contract</div>
+      <div class="tl-body">Air Force Research Laboratory begins funding Mondaloy development. NASA follows shortly after.</div>
+    </div>
+    <div class="tl-item tl-corporate">
+      <div class="tl-dot"></div>
+      <div class="tl-date">2001–2009</div>
+      <div class="tl-title">Three US patent applications filed</div>
+      <div class="tl-body">All three will eventually be abandoned. Last one expires December 2012.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">2011–2013</div>
+      <div class="tl-title">McCasland commands AFRL</div>
+      <div class="tl-body">$4.4 billion budget covering all Air Force S&T programs. Hardwick's Materials Directorate and Reza's Aerojet Rocketdyne contracts both flow through his authority.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">December 2012</div>
+      <div class="tl-title">Last Mondaloy patent expires</div>
+      <div class="tl-body">After this date, Mondaloy exists only as trade secrets inside human heads.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">January 5, 2014</div>
+      <div class="tl-title">Dallis Hardwick dies</div>
+      <div class="tl-body">Stage IV breast cancer. Hospice of Dayton, Ohio. Natural death confirmed by death certificate. <span class="ev-tag ev-documented">Documented</span></div>
+    </div>
+    <div class="tl-item tl-corporate">
+      <div class="tl-dot"></div>
+      <div class="tl-date">March 2022</div>
+      <div class="tl-title">Russia cuts off RD-180 servicing</div>
+      <div class="tl-body">Ukraine sanctions response. Mondaloy becomes operationally critical for US national security space launch.</div>
+    </div>
+    <div class="tl-item tl-corporate">
+      <div class="tl-dot"></div>
+      <div class="tl-date">July 2023</div>
+      <div class="tl-title">L3Harris acquires Aerojet Rocketdyne for $4.7B</div>
+      <div class="tl-body">Reza quietly transitions to JPL NASA under her family name sometime after this acquisition.</div>
+    </div>
+    <div class="tl-item tl-corporate">
+      <div class="tl-dot"></div>
+      <div class="tl-date">March 2025</div>
+      <div class="tl-title">AE Industrial Partners hires Andrew Boyd</div>
+      <div class="tl-body">Former CIA Senior Intelligence Service Officer, Chief of Station, and Director of CIA Center for Cyber Intelligence joins as Operating Partner. <span class="ev-tag ev-documented">Documented</span></div>
+    </div>
+    <div class="tl-item tl-missing">
+      <div class="tl-dot"></div>
+      <div class="tl-date">May 4, 2025</div>
+      <div class="tl-title">Anthony Chavez disappears</div>
+      <div class="tl-body">30-year LANL engineer, 78. Walks out of Los Alamos home on foot. Leaves wallet, car keys, locked car. No cell phone. Never found. <span class="ev-tag ev-documented">Documented</span></div>
+    </div>
+    <div class="tl-item tl-missing">
+      <div class="tl-dot"></div>
+      <div class="tl-date">June 22, 2025</div>
+      <div class="tl-title">Monica Reza vanishes</div>
+      <div class="tl-body">Hiking near Mt. Waterman, Angeles National Forest. 30 feet behind companion, waves, gone. FLIR-negative. Scent dogs track to beanie in ravine, then nothing. Massive multi-agency search finds no body. <span class="ev-tag ev-documented">Documented</span></div>
+    </div>
+    <div class="tl-item tl-missing">
+      <div class="tl-dot"></div>
+      <div class="tl-date">June 26, 2025</div>
+      <div class="tl-title">Find A Grave memorial created for Reza</div>
+      <div class="tl-body">Memorial ID 284387277. Lists death date as June 22. Burial type: "green burial." Location: Angeles National Forest. No body had been recovered. Helicopters still searching. Memorial later deleted. <span class="ev-tag ev-documented">Documented</span> <span class="ev-tag ev-disputed">Disputed</span></div>
+    </div>
+    <div class="tl-item tl-missing">
+      <div class="tl-dot"></div>
+      <div class="tl-date">June 26, 2025</div>
+      <div class="tl-title">Melissa Casias disappears</div>
+      <div class="tl-body">LANL admin assistant, 53. Last seen walking on Highway 518 near Talpa, NM. Both phones found factory-reset at home. <span class="ev-tag ev-documented">Documented</span></div>
+    </div>
+    <div class="tl-item tl-missing">
+      <div class="tl-dot"></div>
+      <div class="tl-date">August 28, 2025</div>
+      <div class="tl-title">Steven Garcia vanishes</div>
+      <div class="tl-body">KCNSC property custodian, 48. Walks out of Albuquerque home with handgun and water bottle. Leaves phone, keys, wallet, car. KCNSC searches his work computers within days. <span class="ev-tag ev-claimed">Claimed</span></div>
+    </div>
+    <div class="tl-item tl-corporate">
+      <div class="tl-dot"></div>
+      <div class="tl-date">December 2024 — February 2026</div>
+      <div class="tl-title">RPMS and CAMINO facilities open</div>
+      <div class="tl-body">Sandia/KCNSC joint additive manufacturing facilities for nickel-based superalloys in weapons components. Same material family as Mondaloy. <span class="ev-tag ev-documented">Documented</span></div>
+    </div>
+    <div class="tl-item tl-corporate">
+      <div class="tl-dot"></div>
+      <div class="tl-date">January 2026</div>
+      <div class="tl-title">AE Industrial Partners to acquire Rocketdyne</div>
+      <div class="tl-body">L3Harris announces sale of 60% stake in propulsion business for $845M. SEC filings do not mention CFIUS. <span class="ev-tag ev-documented">Documented</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">February 19, 2026</div>
+      <div class="tl-title">Trump signs UAP disclosure executive order</div>
+      <div class="tl-body">300-day clock for federal agencies to produce or justify withholding classified UAP records. <span class="ev-tag ev-documented">Documented</span></div>
+    </div>
+    <div class="tl-item tl-missing">
+      <div class="tl-dot"></div>
+      <div class="tl-date">February 27, 2026</div>
+      <div class="tl-title">William McCasland disappears</div>
+      <div class="tl-body">Walks out of Albuquerque home in ~54-minute window. Takes wallet, hiking boots, .38 revolver, red backpack. Leaves phone, glasses, wearable devices. FBI joins search March 11. 700+ homes canvassed. Nothing found. <span class="ev-tag ev-documented">Documented</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLUSTER -->
+<section id="cluster">
+  <div class="section-label">Part 4</div>
+  <div class="section-title">The disappearance cluster</div>
+  <div class="section-desc">Five senior cleared personnel from named defense institutions vanished without a trace within a 10-month window. Three share a near-identical behavioural signature.</div>
+
+  <div class="card" style="overflow-x: auto; margin-bottom: 1.5rem;">
+    <table class="cluster-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Institution</th>
+          <th>Location</th>
+          <th>Behavioural Signature</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name-cell">Anthony Chavez, 78</td>
+          <td style="white-space:nowrap;">May 4, 2025</td>
+          <td>LANL (retired, 30yr)</td>
+          <td>Los Alamos, NM</td>
+          <td><span class="mo-tag match">On foot</span><span class="mo-tag match">No phone</span><span class="mo-tag match">Left wallet/keys</span><span class="mo-tag match">Daylight</span></td>
+          <td><span class="status-badge status-missing" style="margin:0;"><span class="status-dot"></span> Missing</span></td>
+        </tr>
+        <tr>
+          <td class="name-cell">Monica Reza, 60</td>
+          <td style="white-space:nowrap;">Jun 22, 2025</td>
+          <td>Aerojet Rocketdyne / JPL</td>
+          <td>Angeles NF, CA</td>
+          <td><span class="mo-tag match">On foot (hiking)</span><span class="mo-tag">Companion present</span><span class="mo-tag match">No trace</span></td>
+          <td><span class="status-badge status-missing" style="margin:0;"><span class="status-dot"></span> Missing</span></td>
+        </tr>
+        <tr>
+          <td class="name-cell">Melissa Casias, 53</td>
+          <td style="white-space:nowrap;">Jun 26, 2025</td>
+          <td>LANL (active admin)</td>
+          <td>Taos County, NM</td>
+          <td><span class="mo-tag match">On foot</span><span class="mo-tag match">Phones left</span><span class="mo-tag">Phones factory-reset</span></td>
+          <td><span class="status-badge status-missing" style="margin:0;"><span class="status-dot"></span> Missing</span></td>
+        </tr>
+        <tr>
+          <td class="name-cell">Steven Garcia, 48</td>
+          <td style="white-space:nowrap;">Aug 28, 2025</td>
+          <td>KCNSC (contractor)</td>
+          <td>Albuquerque, NM</td>
+          <td><span class="mo-tag match">On foot</span><span class="mo-tag match">No phone</span><span class="mo-tag match">Left wallet/keys</span><span class="mo-tag match">Took firearm</span></td>
+          <td><span class="status-badge status-missing" style="margin:0;"><span class="status-dot"></span> Missing</span></td>
+        </tr>
+        <tr>
+          <td class="name-cell">William McCasland, 68</td>
+          <td style="white-space:nowrap;">Feb 27, 2026</td>
+          <td>AFRL (retired commander)</td>
+          <td>Albuquerque, NM</td>
+          <td><span class="mo-tag match">On foot</span><span class="mo-tag match">No phone</span><span class="mo-tag match">Took firearm</span><span class="mo-tag match">Daylight</span><span class="mo-tag match">Hiking gear</span></td>
+          <td><span class="status-badge status-missing" style="margin:0;"><span class="status-dot"></span> Missing</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="explainer-box" style="border-left: 3px solid var(--blue);">
+    <h3>Geographic clustering</h3>
+    <p>Four of five disappearances occurred in the Albuquerque / Los Alamos / Kirtland nexus. All four New Mexico cases involve individuals connected to facilities that share classified networks: LANL, KCNSC, Sandia National Laboratories, Kirtland AFB, and AFRL Space Vehicles Directorate. A source told the Daily Mail: "That entire mission runs out of Kirtland Air Force Base."</p>
+  </div>
+</section>
+
+<!-- STATISTICS -->
+<section id="statistics">
+  <div class="section-label">Part 5</div>
+  <div class="section-title">The base-rate test</div>
+  <div class="section-desc">A Poisson test comparing observed disappearances against expected rates for senior cleared personnel at named defense institutions.</div>
+
+  <div class="stats-grid">
+    <div class="card stat-card fade-up">
+      <div class="stat-number stat-red">5</div>
+      <div class="stat-label">Unresolved disappearances<br>in 10 months</div>
+    </div>
+    <div class="card stat-card fade-up">
+      <div class="stat-number stat-accent">0.5</div>
+      <div class="stat-label">Expected disappearances<br>over 32 months</div>
+      <div class="stat-note">Population: ~25,000 senior cleared personnel</div>
+    </div>
+    <div class="card stat-card fade-up">
+      <div class="stat-number stat-blue">10×</div>
+      <div class="stat-label">Observed rate vs<br>expected rate</div>
+    </div>
+    <div class="card stat-card fade-up">
+      <div class="stat-number" style="color: var(--green);">p=0.0002</div>
+      <div class="stat-label">Poisson p-value</div>
+      <div class="stat-note">Signal holds from 10K–90K population</div>
+    </div>
+  </div>
+
+  <div class="method-box">
+    <h4>Methodology note</h4>
+    <p>The author explicitly flags the Texas sharpshooter problem: the cluster was noticed first, then the population boundary was drawn around it. The honest read is "this warrants investigation," not "this is proven." The assumed missing-persons rate for stably employed older professionals is 0.75 per 100,000 per year. If the true rate is 2–3× higher, the signal weakens — but arguing that senior cleared defense workers go missing at triple the normal rate is a hard case to make.</p>
+    <p>The murders in the broader list (Grillmair, Loureiro) are within statistical noise: 2 observed vs ~1.3 expected. The murders are not the anomaly. The disappearances are.</p>
+  </div>
+</section>
+
+<!-- CORPORATE CHAIN -->
+<section id="corporate">
+  <div class="section-label">Part 6</div>
+  <div class="section-title">The corporate chain of custody</div>
+  <div class="section-desc">Mondaloy's trade secrets have passed through seven corporate owners in thirty years. The current transaction raises specific regulatory questions.</div>
+
+  <div class="chain">
+    <div class="chain-node"><span class="chain-year">1990s</span>Rockwell Int'l</div>
+    <span class="chain-arrow">→</span>
+    <div class="chain-node"><span class="chain-year">1996</span>Boeing ($3.2B)</div>
+    <span class="chain-arrow">→</span>
+    <div class="chain-node"><span class="chain-year">2005</span>Ruby Acq. / UTC ($700M)</div>
+    <span class="chain-arrow">→</span>
+    <div class="chain-node"><span class="chain-year">2005</span>Pratt & Whitney Rocketdyne</div>
+    <span class="chain-arrow">→</span>
+    <div class="chain-node"><span class="chain-year">2013</span>GenCorp / Aerojet ($550M)</div>
+    <span class="chain-arrow">→</span>
+    <div class="chain-node"><span class="chain-year">2023</span>L3Harris ($4.7B)</div>
+    <span class="chain-arrow">→</span>
+    <div class="chain-node chain-current"><span class="chain-year">2026 (pending)</span>AE Industrial Partners ($845M)</div>
+  </div>
+
+  <div class="explainer-box" style="border-left: 3px solid var(--accent);">
+    <h3>The CFIUS gap</h3>
+    <p>The L3Harris 10-K filed February 12, 2026 does not mention CFIUS — the Committee on Foreign Investment in the United States — in relation to the AE Industrial transaction. Not once. Not in any other SEC filing between December 2025 and March 2026.</p>
+    <p>CFIUS is the federal body that must review any foreign investment in critical American defense technology. Rocket propulsion alloys are regulated under ITAR. AE Industrial Partners is backed by unnamed sovereign wealth fund investors.</p>
+    <p>Three possible explanations: (1) CFIUS reviewed and L3Harris failed to disclose — an SEC violation. (2) The deal was structured to avoid review thresholds — technically legal but exactly what the 2018 CFIUS reform law was meant to close. (3) Nobody filed and CFIUS didn't initiate review on its own — a regulatory failure. One of these three must be true. All three are findings. <span class="ev-tag ev-documented">Documented</span></p>
+  </div>
+</section>
+
+<!-- DELETIONS -->
+<section id="deletions">
+  <div class="section-label">Part 7</div>
+  <div class="section-title">The deletion pattern</div>
+  <div class="section-desc">Four items discussing the Reza memorial or phone evidence were removed across four platforms by different apparent actors.</div>
+
+  <div class="deletion-grid">
+    <div class="card del-card fade-up">
+      <div class="del-platform">Find A Grave</div>
+      <div class="del-desc">Memorial for Reza created June 26, 2025, listing death date and "green burial" while helicopters were still searching. Later deleted. Account "lillian" went inactive.</div>
+      <div class="del-id">Memorial ID 284387277</div>
+    </div>
+    <div class="card del-card fade-up">
+      <div class="del-platform">Substack</div>
+      <div class="del-desc">Entire publication "Sub Intelligence Agency" deleted within ~2 weeks of launching. Had published an article about the Reza memorial anomaly.</div>
+      <div class="del-id">Post ID p-192335136</div>
+    </div>
+    <div class="card del-card fade-up">
+      <div class="del-platform">Facebook (SAR)</div>
+      <div class="del-desc">Montrose Search and Rescue post acknowledging that "technical experts" obtained cell phone forensic data in the Reza case. Deleted.</div>
+      <div class="del-id">Platform: Facebook</div>
+    </div>
+    <div class="card del-card fade-up">
+      <div class="del-platform">Facebook (Group)</div>
+      <div class="del-desc">Civilian search group "Find Monica" deleted after a member posted a theory about phone tampering.</div>
+      <div class="del-id">Platform: Facebook</div>
+    </div>
+  </div>
+</section>
+
+<!-- QUESTIONS -->
+<section id="questions">
+  <div class="section-label">Part 8</div>
+  <div class="section-title">Unanswered questions</div>
+  <div class="section-desc">Specific, checkable questions that could be resolved with public records, FOIA requests, or subpoena power.</div>
+
+  <div class="questions-list">
+    <div class="q-item">
+      <div class="q-num">01</div>
+      <div class="q-text">Who created the Find A Grave memorial for Monica Reza four days into the search, and on what basis was "green burial" listed when no body had been recovered?</div>
+      <div class="q-context">The memorial ID and creator username ("lillian") are on record with Ancestry.com. An email and IP address exist in their database.</div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">02</div>
+      <div class="q-text">What do the cell phone forensics obtained in the Reza case show?</div>
+      <div class="q-context">Montrose SAR acknowledged that "technical experts" obtained cell phone forensic data. That post was deleted. The data has never been publicly released.</div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">03</div>
+      <div class="q-text">Did Judge Abbasi routinely release defendants with loaded-weapon charges on their own recognizance?</div>
+      <div class="q-context">Re: Grillmair case. Freddy Snyder was released OR after arrest with a loaded unregistered rifle on the victim's property. 12 months of comparable decisions from PACER would answer this.</div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">04</div>
+      <div class="q-text">Did Freddy Snyder actually complete the hunter safety course cited in the dismissal of his charges?</div>
+      <div class="q-context">Charges dismissed under CA Penal Code 1385 eleven days before Grillmair's murder. California Department of Fish and Wildlife maintains provider records.</div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">05</div>
+      <div class="q-text">Why did KCNSC run a counterintelligence-style search of Steven Garcia's work computers within days of his disappearance, and then say nothing publicly for eight months?</div>
+      <div class="q-context">This is not an HR response. It is a response to potential data exfiltration by a cleared individual. KCNSC and DOE declined to comment.</div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">06</div>
+      <div class="q-text">Why do L3Harris's SEC filings related to the $845M Rocketdyne transaction never mention CFIUS?</div>
+      <div class="q-context">A PE firm backed by unnamed sovereign wealth funds acquiring ITAR-controlled rocket propulsion technology should trigger mandatory CFIUS review.</div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">07</div>
+      <div class="q-text">Why was Anthony Chavez's missing person report delayed by four days?</div>
+      <div class="q-context">A 30-year LANL engineer vanishes from a small, heavily monitored town, and only the local PD investigates. No FBI. No DOE. No state police.</div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">08</div>
+      <div class="q-text">Can the United States still produce Mondaloy?</div>
+      <div class="q-context">The metallurgist who understood the crystallography is dead. The engineer who scaled it for production is missing. The general who greenlit the programs is missing. The patents are expired. The answer to this question determines whether the US has a capability gap in national security rocket propulsion.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <p><strong>About this page.</strong> This dashboard synthesises publicly available information from patent records, SEC filings, law enforcement press releases, news reporting, and open-source investigative work. It does not assert that any disappearance is the result of foul play. It presents documented facts, flags claims and inferences, and identifies specific questions that remain unanswered. Primary analytical source: <a href="https://x.com/1O0001001101111" target="_blank">@0xTars</a>. Supplementary reporting from The Sentinel Network, SpaceNews, Daily Mail, Newsweek, NewsNation, Men's Journal, and LASD public records.</p>
+  <p style="margin-top: 0.75rem;">Evidence labels: <span class="ev-tag ev-documented">Documented</span> On the public record. <span class="ev-tag ev-claimed">Claimed</span> Stated by a named source, not independently verified. <span class="ev-tag ev-inferred">Inferred</span> Analytical conclusion from documented facts. <span class="ev-tag ev-disputed">Disputed</span> Actively contested between credible sources.</p>
+</footer>
+
+</body>
+</html>
