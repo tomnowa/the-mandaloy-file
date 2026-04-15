@@ -6,7 +6,8 @@
 <meta name="description" content="The Mondaloy File is an open-source investigation into the invention, transfer, and strategic significance of the Mondaloy superalloy and related disappearances.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#FAF7F2">
-<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#15120F" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <meta name="author" content="The Mondaloy File">
 <meta name="keywords" content="Mondaloy, rocket engine alloy, aerospace investigation, AR1 engine, AFRL, Aerojet Rocketdyne">
 <meta property="og:type" content="article">
@@ -41,6 +42,10 @@
   <div class="header-bar">
     <div class="header-brand">Open-Source Investigation</div>
     <div class="header-date">Last updated April 14, 2026 · v6</div>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
+      <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+      <span class="theme-toggle__label">Dark mode</span>
+    </button>
   </div>
   <div class="hero">
     <h1>The <span>Mondaloy</span> File</h1>
@@ -461,6 +466,56 @@
   <p><strong>About this page.</strong> This dashboard synthesises publicly available information from patent records, SEC filings, law enforcement press releases, news reporting, and open-source investigative work. It does not assert that any disappearance is the result of foul play. It presents documented facts, flags claims and inferences, and identifies specific questions that remain unanswered. Primary analytical source: <a href="https://x.com/1O0001001101111" target="_blank" rel="noopener noreferrer">@0xTars</a>. Supplementary reporting from The Sentinel Network, SpaceNews, Daily Mail, Newsweek, NewsNation, Men's Journal, and LASD public records.</p>
   <p style="margin-top: 0.75rem;">Evidence labels: <span class="ev-tag ev-documented">Documented</span> On the public record. <span class="ev-tag ev-claimed">Claimed</span> Stated by a named source, not independently verified. <span class="ev-tag ev-inferred">Inferred</span> Analytical conclusion from documented facts. <span class="ev-tag ev-disputed">Disputed</span> Actively contested between credible sources.</p>
 </footer>
+
+<script>
+(function () {
+  const STORAGE_KEY = 'tmf-theme-preference';
+  const root = document.documentElement;
+  const toggle = document.getElementById('theme-toggle');
+  const themeColorMeta = document.querySelector('meta[name="theme-color"]:not([media])');
+  const colors = { light: '#FAF7F2', dark: '#15120F' };
+
+  if (!toggle) return;
+
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+  let currentTheme = null;
+
+  const setToggleState = (theme) => {
+    const dark = theme === 'dark';
+    toggle.setAttribute('aria-pressed', String(dark));
+    toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    toggle.querySelector('.theme-toggle__icon').textContent = dark ? '☀️' : '🌙';
+    toggle.querySelector('.theme-toggle__label').textContent = dark ? 'Light mode' : 'Dark mode';
+  };
+
+  const applyTheme = (theme, persist = false) => {
+    currentTheme = theme;
+    root.setAttribute('data-theme', theme);
+    if (themeColorMeta) themeColorMeta.setAttribute('content', colors[theme]);
+    setToggleState(theme);
+    if (persist) localStorage.setItem(STORAGE_KEY, theme);
+  };
+
+  const getInitialTheme = () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
+    return media.matches ? 'dark' : 'light';
+  };
+
+  applyTheme(getInitialTheme());
+
+  toggle.addEventListener('click', () => {
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(nextTheme, true);
+  });
+
+  media.addEventListener('change', (event) => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'light' || saved === 'dark') return;
+    applyTheme(event.matches ? 'dark' : 'light');
+  });
+})();
+</script>
 
 </body>
 </html>

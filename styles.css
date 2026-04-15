@@ -39,6 +39,30 @@
   --mono: 'IBM Plex Mono', monospace;
 }
 
+[data-theme="dark"] {
+  color-scheme: dark;
+  --md-sys-color-surface: #15120F;
+  --md-sys-color-surface-container: #1E1A16;
+  --md-sys-color-surface-container-highest: #29231D;
+  --md-sys-color-on-surface: #F2EBE4;
+  --md-sys-color-on-surface-variant: #C8BEB5;
+  --md-sys-color-outline-variant: #3A332D;
+  --md-sys-color-primary: #E29D78;
+  --md-sys-color-primary-container: #5C3423;
+  --md-sys-color-on-primary-container: #FFDCCB;
+  --text-tertiary: #A69B91;
+  --blue: #8AB4D6;
+  --blue-light: #243743;
+  --green: #8FC79F;
+  --green-light: #23362A;
+  --red: #E58A8B;
+  --red-light: #422629;
+  --yellow: #D3BC81;
+  --yellow-light: #3D3521;
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --elev-2: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -78,6 +102,26 @@ body {
   font-size: 0.75rem;
   color: var(--text-tertiary);
 }
+.theme-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  padding: 0.4rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.theme-toggle:hover {
+  background: var(--bg-accent);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border) 65%);
+}
+.theme-toggle__icon { line-height: 1; }
 .hero {
   padding: 3.5rem 0 2.5rem;
   max-width: 780px;
@@ -417,7 +461,7 @@ section + section { border-top: 1px solid var(--border); }
   display: block;
 }
 .chain-arrow { color: var(--text-tertiary); font-size: 1rem; }
-.chain-node.chain-current { border-color: var(--accent); background: #FDF8F5; }
+.chain-node.chain-current { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--bg-card) 90%); }
 
 /* QUESTIONS */
 .questions-list {
@@ -531,6 +575,8 @@ section + section { border-top: 1px solid var(--border); }
 /* RESPONSIVE */
 @media (max-width: 768px) {
   .site-header, main, .site-footer, .nav-strip { padding-left: 1.25rem; padding-right: 1.25rem; }
+  .header-bar { flex-wrap: wrap; gap: 0.6rem; }
+  .theme-toggle { margin-left: 0; }
   .triangle-grid { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .chain { flex-direction: column; align-items: flex-start; }
