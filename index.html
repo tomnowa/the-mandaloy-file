@@ -314,6 +314,74 @@
     </table>
   </div>
 
+  <div class="card map-card fade-up" aria-labelledby="cluster-map-title">
+    <div class="cluster-map__header">
+      <h3 id="cluster-map-title">Interactive disappearance map (USA)</h3>
+      <p>Select a pin to view case details. Pins can be focused with keyboard tab navigation.</p>
+    </div>
+
+    <div class="cluster-map" role="region" aria-label="Map of disappearance locations in the United States">
+      <svg class="cluster-map__svg" viewBox="0 0 1000 620" aria-hidden="true" focusable="false">
+        <path class="us-shape" d="M115 128 L150 105 L238 90 L302 92 L360 85 L430 88 L505 104 L570 102 L612 92 L690 110 L760 106 L812 136 L890 184 L876 230 L914 280 L912 360 L845 402 L790 392 L738 410 L650 402 L602 418 L560 450 L532 480 L472 494 L402 512 L340 505 L270 512 L222 494 L186 452 L174 414 L148 392 L118 322 L98 240 Z"/>
+      </svg>
+
+      <div class="cluster-map__pins" role="list">
+        <button class="map-pin" type="button" role="listitem" style="--x:24%; --y:50%;"
+          data-name="Monica Reza"
+          data-date="June 22, 2025"
+          data-location="Angeles National Forest, California"
+          data-institution="Aerojet Rocketdyne / JPL"
+          data-details="Vanished while hiking near Mt. Waterman; large search produced no trace.">
+          <span class="sr-only">Monica Reza disappearance pin</span>
+        </button>
+
+        <button class="map-pin" type="button" role="listitem" style="--x:52%; --y:46%;"
+          data-name="Anthony Chavez"
+          data-date="May 4, 2025"
+          data-location="Los Alamos, New Mexico"
+          data-institution="LANL (retired, 30 years)"
+          data-details="Walked away from home on foot, leaving wallet and keys; never located.">
+          <span class="sr-only">Anthony Chavez disappearance pin</span>
+        </button>
+
+        <button class="map-pin" type="button" role="listitem" style="--x:53%; --y:51%;"
+          data-name="Melissa Casias"
+          data-date="June 26, 2025"
+          data-location="Taos County, New Mexico"
+          data-institution="LANL (active admin)"
+          data-details="Last seen on foot near Highway 518 in Talpa, with both phones later found reset at home.">
+          <span class="sr-only">Melissa Casias disappearance pin</span>
+        </button>
+
+        <button class="map-pin" type="button" role="listitem" style="--x:51%; --y:56%;"
+          data-name="Steven Garcia"
+          data-date="August 28, 2025"
+          data-location="Albuquerque, New Mexico"
+          data-institution="KCNSC (contractor)"
+          data-details="Left home on foot with water and firearm; phone, keys, and wallet remained behind.">
+          <span class="sr-only">Steven Garcia disappearance pin</span>
+        </button>
+
+        <button class="map-pin" type="button" role="listitem" style="--x:51%; --y:56%;"
+          data-name="William McCasland"
+          data-date="February 27, 2026"
+          data-location="Albuquerque, New Mexico"
+          data-institution="AFRL (retired commander)"
+          data-details="Disappeared from a short daytime window; FBI later joined a broad neighborhood canvass.">
+          <span class="sr-only">William McCasland disappearance pin</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="cluster-map__details" aria-live="polite">
+      <p class="map-details__eyebrow">Selected case</p>
+      <h4 class="map-details__name">Monica Reza</h4>
+      <p class="map-details__meta">June 22, 2025 · Angeles National Forest, California</p>
+      <p class="map-details__institution">Aerojet Rocketdyne / JPL</p>
+      <p class="map-details__summary">Vanished while hiking near Mt. Waterman; large search produced no trace.</p>
+    </div>
+  </div>
+
   <div class="explainer-box" style="border-left: 3px solid var(--blue);">
     <h3>Geographic clustering</h3>
     <p>Four of five disappearances occurred in the Albuquerque / Los Alamos / Kirtland nexus. All four New Mexico cases involve individuals connected to facilities that share classified networks: LANL, KCNSC, Sandia National Laboratories, Kirtland AFB, and AFRL Space Vehicles Directorate. A source told the Daily Mail: "That entire mission runs out of Kirtland Air Force Base."</p>
@@ -534,6 +602,38 @@
     if (saved === 'light' || saved === 'dark') return;
     applyTheme(event.matches ? 'dark' : 'light');
   });
+})();
+
+(function () {
+  const mapCard = document.querySelector('.map-card');
+  if (!mapCard) return;
+
+  const pins = Array.from(mapCard.querySelectorAll('.map-pin'));
+  const nameEl = mapCard.querySelector('.map-details__name');
+  const metaEl = mapCard.querySelector('.map-details__meta');
+  const institutionEl = mapCard.querySelector('.map-details__institution');
+  const summaryEl = mapCard.querySelector('.map-details__summary');
+
+  const setActivePin = (pin) => {
+    pins.forEach((candidate) => {
+      const active = candidate === pin;
+      candidate.classList.toggle('is-active', active);
+      candidate.setAttribute('aria-pressed', String(active));
+    });
+
+    nameEl.textContent = pin.dataset.name || '';
+    metaEl.textContent = `${pin.dataset.date || ''} · ${pin.dataset.location || ''}`;
+    institutionEl.textContent = pin.dataset.institution || '';
+    summaryEl.textContent = pin.dataset.details || '';
+  };
+
+  pins.forEach((pin) => {
+    pin.setAttribute('aria-pressed', 'false');
+    pin.addEventListener('click', () => setActivePin(pin));
+    pin.addEventListener('focus', () => setActivePin(pin));
+  });
+
+  if (pins[0]) setActivePin(pins[0]);
 })();
 </script>
 
