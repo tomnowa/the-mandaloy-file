@@ -316,6 +316,10 @@ section + section { border-top: 1px solid var(--border); }
   margin-bottom: 0.75rem;
 }
 .explainer-box p:last-child { margin-bottom: 0; }
+.explainer-box--critical {
+  background: color-mix(in srgb, var(--accent) 12%, var(--bg-card) 88%);
+  border-left: 3px solid var(--accent);
+}
 
 /* TIMELINE */
 .timeline {
