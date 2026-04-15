@@ -314,6 +314,46 @@
     </table>
   </div>
 
+  <div class="card cluster-map-card fade-up" style="margin-bottom: 1.5rem;">
+    <div class="cluster-map-head">
+      <h3>Interactive disappearance map (USA)</h3>
+      <p>Select a pin to view each case location and timeline marker.</p>
+    </div>
+    <div class="cluster-map-grid">
+      <div class="usa-map" role="img" aria-label="Map of the United States showing disappearance locations in California and New Mexico">
+        <svg class="usa-map__svg" viewBox="0 0 1000 620" aria-hidden="true" focusable="false">
+          <path d="M86 132L129 103L183 96L228 70L287 57L347 80L392 72L448 80L510 73L589 92L653 104L733 96L781 123L842 139L903 191L874 233L855 271L867 320L837 360L774 382L752 410L716 420L671 417L612 436L543 414L495 439L448 431L400 443L329 452L267 429L215 413L174 385L137 357L124 330L91 291L110 241L87 203Z"/>
+        </svg>
+        <button class="map-pin is-active" type="button" style="--x: 12%; --y: 66%;" data-case="reza" aria-pressed="true" aria-label="Monica Reza disappearance near Angeles National Forest, California">
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="map-pin__label">Reza</span>
+        </button>
+        <button class="map-pin" type="button" style="--x: 28.4%; --y: 48%;" data-case="chavez" aria-pressed="false" aria-label="Anthony Chavez disappearance in Los Alamos, New Mexico">
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="map-pin__label">Chavez</span>
+        </button>
+        <button class="map-pin" type="button" style="--x: 30%; --y: 43.5%;" data-case="casias" aria-pressed="false" aria-label="Melissa Casias disappearance in Taos County, New Mexico">
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="map-pin__label">Casias</span>
+        </button>
+        <button class="map-pin" type="button" style="--x: 29%; --y: 51.2%;" data-case="garcia" aria-pressed="false" aria-label="Steven Garcia disappearance in Albuquerque, New Mexico">
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="map-pin__label">Garcia</span>
+        </button>
+        <button class="map-pin" type="button" style="--x: 31%; --y: 54%;" data-case="mccasland" aria-pressed="false" aria-label="William McCasland disappearance in Albuquerque, New Mexico">
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="map-pin__label">McCasland</span>
+        </button>
+      </div>
+      <div class="cluster-map-details" id="cluster-map-details" aria-live="polite">
+        <p class="map-kicker">Selected case</p>
+        <h4 id="map-case-name">Monica Reza</h4>
+        <p id="map-case-meta">June 22, 2025 · Angeles National Forest, California</p>
+        <p id="map-case-notes">Hiking disappearance; no body recovered after extensive multi-agency search.</p>
+      </div>
+    </div>
+  </div>
+
   <div class="explainer-box" style="border-left: 3px solid var(--blue);">
     <h3>Geographic clustering</h3>
     <p>Four of five disappearances occurred in the Albuquerque / Los Alamos / Kirtland nexus. All four New Mexico cases involve individuals connected to facilities that share classified networks: LANL, KCNSC, Sandia National Laboratories, Kirtland AFB, and AFRL Space Vehicles Directorate. A source told the Daily Mail: "That entire mission runs out of Kirtland Air Force Base."</p>
@@ -533,6 +573,59 @@
     const saved = storage.get();
     if (saved === 'light' || saved === 'dark') return;
     applyTheme(event.matches ? 'dark' : 'light');
+  });
+})();
+
+(function () {
+  const mapCases = {
+    reza: {
+      name: 'Monica Reza',
+      meta: 'June 22, 2025 · Angeles National Forest, California',
+      notes: 'Hiking disappearance; no body recovered after extensive multi-agency search.'
+    },
+    chavez: {
+      name: 'Anthony Chavez',
+      meta: 'May 4, 2025 · Los Alamos, New Mexico',
+      notes: 'Left home on foot without phone, wallet, or keys. No confirmed sightings after departure.'
+    },
+    casias: {
+      name: 'Melissa Casias',
+      meta: 'June 26, 2025 · Taos County, New Mexico',
+      notes: 'Last seen walking near Highway 518; both phones were recovered at home.'
+    },
+    garcia: {
+      name: 'Steven Garcia',
+      meta: 'August 28, 2025 · Albuquerque, New Mexico',
+      notes: 'Reportedly left on foot with firearm, leaving phone, wallet, and keys behind.'
+    },
+    mccasland: {
+      name: 'William McCasland',
+      meta: 'February 27, 2026 · Albuquerque, New Mexico',
+      notes: 'Left home in daylight with hiking gear and revolver, but without phone or glasses.'
+    }
+  };
+  const pins = Array.from(document.querySelectorAll('.map-pin'));
+  const caseName = document.getElementById('map-case-name');
+  const caseMeta = document.getElementById('map-case-meta');
+  const caseNotes = document.getElementById('map-case-notes');
+
+  if (!pins.length || !caseName || !caseMeta || !caseNotes) return;
+
+  const activatePin = (key) => {
+    const selected = mapCases[key];
+    if (!selected) return;
+    pins.forEach((pin) => {
+      const active = pin.dataset.case === key;
+      pin.classList.toggle('is-active', active);
+      pin.setAttribute('aria-pressed', String(active));
+    });
+    caseName.textContent = selected.name;
+    caseMeta.textContent = selected.meta;
+    caseNotes.textContent = selected.notes;
+  };
+
+  pins.forEach((pin) => {
+    pin.addEventListener('click', () => activatePin(pin.dataset.case));
   });
 })();
 </script>
