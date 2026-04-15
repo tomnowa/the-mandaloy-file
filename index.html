@@ -257,6 +257,45 @@
   <h2 class="section-title">The disappearance cluster</h2>
   <p class="section-desc">Five senior cleared personnel from named defense institutions vanished without a trace within a 10-month window. Three share a near-identical behavioural signature.</p>
 
+  <div class="card cluster-map-card fade-up">
+    <div class="cluster-map-head">
+      <h3>Interactive disappearance map (USA)</h3>
+      <p>Select a pin to inspect the case details and timeline context.</p>
+    </div>
+    <div class="cluster-map-wrap">
+      <svg class="usa-map" viewBox="0 0 960 560" aria-hidden="true" focusable="false">
+        <path class="usa-map__outline" d="M90 220 L120 180 L165 160 L230 150 L310 135 L380 118 L470 108 L560 106 L650 116 L726 132 L792 160 L836 208 L856 250 L840 294 L818 324 L822 344 L794 350 L744 340 L692 334 L646 346 L610 372 L564 386 L516 398 L464 406 L398 412 L338 406 L296 396 L264 374 L230 356 L198 326 L166 308 L134 286 L108 254 Z"></path>
+      </svg>
+      <div class="cluster-pins" role="list" aria-label="Disappearance locations in the United States">
+        <button class="cluster-pin is-active" type="button" data-case="anthony" style="--x:20.5%; --y:53.5%;" role="listitem" aria-label="Anthony Chavez disappearance near Los Alamos, New Mexico">
+          <span class="cluster-pin__dot" aria-hidden="true"></span>
+          <span class="cluster-pin__label">Los Alamos, NM</span>
+        </button>
+        <button class="cluster-pin" type="button" data-case="monica" style="--x:12.5%; --y:49.8%;" role="listitem" aria-label="Monica Reza disappearance in Angeles National Forest, California">
+          <span class="cluster-pin__dot" aria-hidden="true"></span>
+          <span class="cluster-pin__label">Angeles NF, CA</span>
+        </button>
+        <button class="cluster-pin" type="button" data-case="melissa" style="--x:21.1%; --y:55.3%;" role="listitem" aria-label="Melissa Casias disappearance in Taos County, New Mexico">
+          <span class="cluster-pin__dot" aria-hidden="true"></span>
+          <span class="cluster-pin__label">Taos County, NM</span>
+        </button>
+        <button class="cluster-pin" type="button" data-case="steven" style="--x:20.2%; --y:58.8%;" role="listitem" aria-label="Steven Garcia disappearance in Albuquerque, New Mexico">
+          <span class="cluster-pin__dot" aria-hidden="true"></span>
+          <span class="cluster-pin__label">Albuquerque, NM</span>
+        </button>
+        <button class="cluster-pin" type="button" data-case="william" style="--x:20.2%; --y:58.8%;" role="listitem" aria-label="William McCasland disappearance in Albuquerque, New Mexico">
+          <span class="cluster-pin__dot" aria-hidden="true"></span>
+          <span class="cluster-pin__label">Albuquerque, NM (second case)</span>
+        </button>
+      </div>
+    </div>
+    <div class="cluster-map-detail" id="cluster-map-detail" aria-live="polite">
+      <h4 data-case-title>Anthony Chavez · Los Alamos, New Mexico</h4>
+      <p data-case-meta>May 4, 2025 · LANL (retired engineer, 30 years)</p>
+      <p data-case-body>Walked out of his Los Alamos home on foot and was never found. Wallet, keys, and vehicle remained behind.</p>
+    </div>
+  </div>
+
   <div class="card" style="overflow-x: auto; margin-bottom: 1.5rem;">
     <table class="cluster-table">
       <thead>
@@ -533,6 +572,64 @@
     const saved = storage.get();
     if (saved === 'light' || saved === 'dark') return;
     applyTheme(event.matches ? 'dark' : 'light');
+  });
+})();
+
+(function () {
+  const pins = Array.from(document.querySelectorAll('.cluster-pin'));
+  const detail = document.getElementById('cluster-map-detail');
+  if (!pins.length || !detail) return;
+
+  const cases = {
+    anthony: {
+      title: 'Anthony Chavez · Los Alamos, New Mexico',
+      meta: 'May 4, 2025 · LANL (retired engineer, 30 years)',
+      body: 'Walked out of his Los Alamos home on foot and was never found. Wallet, keys, and vehicle remained behind.'
+    },
+    monica: {
+      title: 'Monica Reza · Angeles National Forest, California',
+      meta: 'June 22, 2025 · Aerojet Rocketdyne / JPL',
+      body: 'Vanished during a hike near Mt. Waterman. Search teams found personal effects but no body or confirmed trail exit.'
+    },
+    melissa: {
+      title: 'Melissa Casias · Taos County, New Mexico',
+      meta: 'June 26, 2025 · LANL (active admin)',
+      body: 'Last seen walking near Highway 518. Her two phones were located at home in a factory-reset state.'
+    },
+    steven: {
+      title: 'Steven Garcia · Albuquerque, New Mexico',
+      meta: 'August 28, 2025 · KCNSC (contractor)',
+      body: 'Left home on foot with a handgun and water bottle. Phone, keys, wallet, and vehicle stayed at the residence.'
+    },
+    william: {
+      title: 'William McCasland · Albuquerque, New Mexico',
+      meta: 'February 27, 2026 · AFRL (retired commander)',
+      body: 'Disappeared in a narrow daytime window after leaving with hiking gear, wallet, and a revolver while electronics stayed behind.'
+    }
+  };
+
+  const titleNode = detail.querySelector('[data-case-title]');
+  const metaNode = detail.querySelector('[data-case-meta]');
+  const bodyNode = detail.querySelector('[data-case-body]');
+
+  const setActive = (key) => {
+    const payload = cases[key];
+    if (!payload) return;
+    pins.forEach((pin) => {
+      const active = pin.dataset.case === key;
+      pin.classList.toggle('is-active', active);
+      pin.setAttribute('aria-pressed', String(active));
+    });
+    titleNode.textContent = payload.title;
+    metaNode.textContent = payload.meta;
+    bodyNode.textContent = payload.body;
+  };
+
+  pins.forEach((pin) => {
+    pin.setAttribute('aria-pressed', pin.classList.contains('is-active') ? 'true' : 'false');
+    pin.addEventListener('click', () => setActive(pin.dataset.case));
+    pin.addEventListener('mouseenter', () => setActive(pin.dataset.case));
+    pin.addEventListener('focus', () => setActive(pin.dataset.case));
   });
 })();
 </script>
