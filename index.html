@@ -314,6 +314,67 @@
     </table>
   </div>
 
+  <div class="cluster-map card" aria-labelledby="cluster-map-title">
+    <div class="cluster-map__header">
+      <h3 id="cluster-map-title">Interactive US disappearance map</h3>
+      <p>Select a pin to inspect each disappearance location and event details.</p>
+    </div>
+    <div class="cluster-map__stage">
+      <svg class="cluster-map__svg" viewBox="0 0 1000 620" role="img" aria-label="Map of the continental United States with disappearance pins">
+        <path class="cluster-map__land" d="M80 248 107 228 141 222 166 232 195 225 238 226 268 210 322 219 359 215 407 222 452 215 491 222 533 216 562 230 610 228 653 240 691 251 723 281 744 317 780 325 811 350 826 377 846 388 892 401 921 421 914 441 880 452 856 449 821 463 790 463 760 484 723 491 703 514 673 524 625 523 600 541 565 544 534 533 520 513 486 511 454 495 403 497 370 519 337 518 308 504 271 495 245 476 236 451 216 434 194 431 164 398 136 381 112 353 93 327 86 303Z"></path>
+      </svg>
+
+      <div class="cluster-map__pins" role="list" aria-label="Disappearance locations">
+        <button type="button" class="map-pin is-active" data-event="chavez" style="--x: 31.2%; --y: 47.5%;" aria-pressed="true">
+          <span class="map-pin__pulse" aria-hidden="true"></span>
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="sr-only">Anthony Chavez disappearance location</span>
+        </button>
+        <button type="button" class="map-pin" data-event="reza" style="--x: 8.8%; --y: 50.2%;" aria-pressed="false">
+          <span class="map-pin__pulse" aria-hidden="true"></span>
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="sr-only">Monica Reza disappearance location</span>
+        </button>
+        <button type="button" class="map-pin" data-event="casias" style="--x: 31.8%; --y: 50%;" aria-pressed="false">
+          <span class="map-pin__pulse" aria-hidden="true"></span>
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="sr-only">Melissa Casias disappearance location</span>
+        </button>
+        <button type="button" class="map-pin" data-event="garcia" style="--x: 30.7%; --y: 52.3%;" aria-pressed="false">
+          <span class="map-pin__pulse" aria-hidden="true"></span>
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="sr-only">Steven Garcia disappearance location</span>
+        </button>
+        <button type="button" class="map-pin" data-event="mccasland" style="--x: 30.5%; --y: 52.7%;" aria-pressed="false">
+          <span class="map-pin__pulse" aria-hidden="true"></span>
+          <span class="map-pin__dot" aria-hidden="true"></span>
+          <span class="sr-only">William McCasland disappearance location</span>
+        </button>
+      </div>
+    </div>
+    <div class="cluster-map__legend" role="tablist" aria-label="Disappearance events">
+      <button type="button" role="tab" aria-selected="true" class="cluster-chip is-active" data-event="chavez">
+        Anthony Chavez · Los Alamos, NM
+      </button>
+      <button type="button" role="tab" aria-selected="false" class="cluster-chip" data-event="reza">
+        Monica Reza · Angeles NF, CA
+      </button>
+      <button type="button" role="tab" aria-selected="false" class="cluster-chip" data-event="casias">
+        Melissa Casias · Talpa, NM
+      </button>
+      <button type="button" role="tab" aria-selected="false" class="cluster-chip" data-event="garcia">
+        Steven Garcia · Albuquerque, NM
+      </button>
+      <button type="button" role="tab" aria-selected="false" class="cluster-chip" data-event="mccasland">
+        William McCasland · Albuquerque, NM
+      </button>
+    </div>
+    <div class="cluster-map__detail" aria-live="polite">
+      <p class="cluster-map__detail-date">May 4, 2025 · 35.88°N, 106.30°W</p>
+      <p class="cluster-map__detail-body"><strong>Anthony Chavez</strong> disappeared after leaving home on foot in Los Alamos, New Mexico. Wallet, keys, and vehicle were left behind.</p>
+    </div>
+  </div>
+
   <div class="explainer-box" style="border-left: 3px solid var(--blue);">
     <h3>Geographic clustering</h3>
     <p>Four of five disappearances occurred in the Albuquerque / Los Alamos / Kirtland nexus. All four New Mexico cases involve individuals connected to facilities that share classified networks: LANL, KCNSC, Sandia National Laboratories, Kirtland AFB, and AFRL Space Vehicles Directorate. A source told the Daily Mail: "That entire mission runs out of Kirtland Air Force Base."</p>
@@ -534,6 +595,65 @@
     if (saved === 'light' || saved === 'dark') return;
     applyTheme(event.matches ? 'dark' : 'light');
   });
+})();
+
+(function () {
+  const clusterMap = document.querySelector('.cluster-map');
+  if (!clusterMap) return;
+
+  const chips = clusterMap.querySelectorAll('.cluster-chip');
+  const pins = clusterMap.querySelectorAll('.map-pin');
+  const detailDate = clusterMap.querySelector('.cluster-map__detail-date');
+  const detailBody = clusterMap.querySelector('.cluster-map__detail-body');
+
+  const details = {
+    chavez: {
+      date: 'May 4, 2025 · 35.88°N, 106.30°W',
+      body: '<strong>Anthony Chavez</strong> disappeared after leaving home on foot in Los Alamos, New Mexico. Wallet, keys, and vehicle were left behind.'
+    },
+    reza: {
+      date: 'June 22, 2025 · 34.36°N, 117.89°W',
+      body: '<strong>Monica Reza</strong> vanished while hiking near Mount Waterman in Angeles National Forest, California. Multi-agency searches found no trace.'
+    },
+    casias: {
+      date: 'June 26, 2025 · 36.35°N, 105.59°W',
+      body: '<strong>Melissa Casias</strong> was last seen walking near Talpa in Taos County, New Mexico. Both phones were later recovered at home.'
+    },
+    garcia: {
+      date: 'August 28, 2025 · 35.08°N, 106.65°W',
+      body: '<strong>Steven Garcia</strong> disappeared in Albuquerque, New Mexico after leaving on foot with a firearm, while personal effects stayed behind.'
+    },
+    mccasland: {
+      date: 'February 27, 2026 · 35.12°N, 106.60°W',
+      body: '<strong>William McCasland</strong> disappeared in Albuquerque, New Mexico in a daylight window, leaving his phone and devices at home.'
+    }
+  };
+
+  const setActive = (key) => {
+    chips.forEach((chip) => {
+      const isActive = chip.dataset.event === key;
+      chip.classList.toggle('is-active', isActive);
+      chip.setAttribute('aria-selected', String(isActive));
+    });
+
+    pins.forEach((pin) => {
+      const isActive = pin.dataset.event === key;
+      pin.classList.toggle('is-active', isActive);
+      pin.setAttribute('aria-pressed', String(isActive));
+    });
+
+    detailDate.textContent = details[key].date;
+    detailBody.innerHTML = details[key].body;
+  };
+
+  const bindControl = (elements) => {
+    elements.forEach((element) => {
+      element.addEventListener('click', () => setActive(element.dataset.event));
+    });
+  };
+
+  bindControl(chips);
+  bindControl(pins);
 })();
 </script>
 
