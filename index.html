@@ -474,6 +474,22 @@
   const toggle = document.getElementById('theme-toggle');
   const themeColorMeta = document.querySelector('meta[name="theme-color"]:not([media])');
   const colors = { light: '#FAF7F2', dark: '#15120F' };
+  const storage = {
+    get() {
+      try {
+        return localStorage.getItem(STORAGE_KEY);
+      } catch (error) {
+        return null;
+      }
+    },
+    set(theme) {
+      try {
+        localStorage.setItem(STORAGE_KEY, theme);
+      } catch (error) {
+        // Ignore storage failures (for example private mode or restricted iframes).
+      }
+    }
+  };
 
   if (!toggle) return;
 
@@ -493,11 +509,11 @@
     root.setAttribute('data-theme', theme);
     if (themeColorMeta) themeColorMeta.setAttribute('content', colors[theme]);
     setToggleState(theme);
-    if (persist) localStorage.setItem(STORAGE_KEY, theme);
+    if (persist) storage.set(theme);
   };
 
   const getInitialTheme = () => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = storage.get();
     if (saved === 'light' || saved === 'dark') return saved;
     return media.matches ? 'dark' : 'light';
   };
@@ -510,7 +526,7 @@
   });
 
   media.addEventListener('change', (event) => {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = storage.get();
     if (saved === 'light' || saved === 'dark') return;
     applyTheme(event.matches ? 'dark' : 'light');
   });
