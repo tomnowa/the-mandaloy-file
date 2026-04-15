@@ -1,0 +1,23 @@
+{
+  "name": "the-mandaloy-file",
+  "version": "1.0.0",
+  "description": "An open-source investigation dashboard documenting the disappearances of personnel connected to Mondaloy, a strategically critical nickel-based superalloy used in US national security rocket propulsion.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomnowa/the-mandaloy-file.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomnowa/the-mandaloy-file/issues"
+  },
+  "homepage": "https://github.com/tomnowa/the-mandaloy-file#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
+}
